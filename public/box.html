@@ -353,14 +353,17 @@ const ctx = new (window.AudioContext || window.webkitAudioContext)();
 const musicGain = ctx.createGain(); musicGain.gain.value = 0.8; musicGain.connect(ctx.destination);
 const voiceGain = ctx.createGain(); voiceGain.gain.value = 1.2; voiceGain.connect(ctx.destination);
 
+// Bouton obligatoire pour que Chrome autorise l'audio
+const startBtn = document.createElement('button');
+startBtn.textContent = '🔊 Démarrer le son';
+startBtn.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;padding:20px 40px;font-size:1.2rem;font-weight:700;background:#ff2d55;color:white;border:none;border-radius:14px;cursor:pointer;box-shadow:0 0 40px rgba(255,45,85,0.5)';
+document.body.appendChild(startBtn);
+startBtn.onclick = () => { ctx.resume().then(() => startBtn.remove()); };
+
 document.getElementById('volMusique').oninput = e => musicGain.gain.value = +e.target.value;
 document.getElementById('volVoix').oninput = e => voiceGain.gain.value = +e.target.value;
 
 // ── Fichier ────────────────────────────────────────────────────────────
-  // Démarrage automatique du contexte audio au premier clic
-document.addEventListener('click', () => {
-  if (ctx.state === 'suspended') ctx.resume();
-}, { once: true });
 let mediaSourceConnected = false;
 document.getElementById('fileInput').onchange = (e) => {
   const file = e.target.files[0]; if(!file) return;
