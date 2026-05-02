@@ -357,6 +357,10 @@ document.getElementById('volMusique').oninput = e => musicGain.gain.value = +e.t
 document.getElementById('volVoix').oninput = e => voiceGain.gain.value = +e.target.value;
 
 // ── Fichier ────────────────────────────────────────────────────────────
+  // Démarrage automatique du contexte audio au premier clic
+document.addEventListener('click', () => {
+  if (ctx.state === 'suspended') ctx.resume();
+}, { once: true });
 let mediaSourceConnected = false;
 document.getElementById('fileInput').onchange = (e) => {
   const file = e.target.files[0]; if(!file) return;
