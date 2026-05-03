@@ -20,16 +20,26 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
 // Credentials TURN sécurisés
-app.get('/turn-credentials', async (req, res) => {
-  try {
-    const response = await fetch(
-      `https://karaoke.metered.live/api/v1/turn/credentials?apiKey=rb7ysIw8x5D8Z9j_4A1MQMKxG5P90Ru7DbYNenCaswjy1qAO`
-    );
-    const data = await response.json();
-    res.json(data);
-  } catch(e) {
-    res.json([{ urls: 'stun:stun.l.google.com:19302' }]);
-  }
+app.get('/turn-credentials', (req, res) => {
+  res.json([
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:stun1.l.google.com:19302' },
+    {
+      urls: 'turn:openrelay.metered.ca:80',
+      username: 'openrelayproject',
+      credential: 'openrelayproject'
+    },
+    {
+      urls: 'turn:openrelay.metered.ca:443',
+      username: 'openrelayproject',
+      credential: 'openrelayproject'
+    },
+    {
+      urls: 'turn:openrelay.metered.ca:443?transport=tcp',
+      username: 'openrelayproject',
+      credential: 'openrelayproject'
+    }
+  ]);
 });
 
 let hostSocket = null;
