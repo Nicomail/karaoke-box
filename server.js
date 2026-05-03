@@ -23,7 +23,7 @@ app.get('/health', (req, res) => res.json({ status: 'ok' }));
 app.get('/turn-credentials', async (req, res) => {
   try {
     const response = await fetch(
-      `https://karaoke.metered.live/api/v1/turn/credentials?apiKey=rb7yslw8x5D8Z9j_4A1MQMKxG5P90Ru7DbYNenCaswjy1qAO`
+      `https://karaoke.metered.live/api/v1/turn/credentials?apiKey=rb7ysIw8x5D8Z9j_4A1MQMKxG5P90Ru7DbYNenCaswjy1qAO`
     );
     const data = await response.json();
     res.json(data);
