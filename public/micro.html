@@ -1,3 +1,6 @@
+Micro · HTML
+Copier
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -7,164 +10,62 @@
 <script src="/socket.io/socket.io.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;600;700&display=swap');
-
-  :root {
-    --bg: #0a0a0f;
-    --accent: #ff2d55;
-    --accent2: #bf5af2;
-    --text: #f5f5f7;
-    --muted: #6e6e73;
-    --green: #30d158;
-  }
-
+  :root { --bg:#0a0a0f;--accent:#ff2d55;--accent2:#bf5af2;--text:#f5f5f7;--muted:#6e6e73;--green:#30d158; }
   * { margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Inter', sans-serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 28px 20px;
-    overflow: hidden;
-  }
-
+  body { background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px;overflow:hidden; }
   .orb { position:fixed;border-radius:50%;filter:blur(90px);opacity:.14;pointer-events:none; }
   .orb1 { width:280px;height:280px;background:var(--accent);top:-60px;right:-60px; }
   .orb2 { width:220px;height:220px;background:var(--accent2);bottom:-40px;left:-40px; }
-
-  /* ─ ÉCRAN NOM ─ */
-  #screenName {
-    display:flex;flex-direction:column;align-items:center;gap:22px;
-    width:100%;max-width:310px;position:relative;z-index:1;
-  }
-
-  .logo {
-    font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:6px;
-    background:linear-gradient(135deg,var(--accent),var(--accent2));
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  }
-
+  #screenName { display:flex;flex-direction:column;align-items:center;gap:22px;width:100%;max-width:310px;position:relative;z-index:1; }
+  .logo { font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:6px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
   .subtitle { color:var(--muted);font-size:.88rem;text-align:center;line-height:1.5; }
-
-  input[type="text"] {
-    width:100%;background:rgba(255,255,255,.07);
-    border:1px solid rgba(255,255,255,.15);border-radius:12px;
-    padding:15px 18px;color:var(--text);font-size:1.05rem;
-    font-family:'Inter',sans-serif;outline:none;text-align:center;
-    transition:border-color .2s;
-  }
+  input[type="text"] { width:100%;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:15px 18px;color:var(--text);font-size:1.05rem;font-family:'Inter',sans-serif;outline:none;text-align:center;transition:border-color .2s; }
   input[type="text"]:focus { border-color:var(--accent); }
   input[type="text"]::placeholder { color:var(--muted); }
-
-  .btn-join {
-    width:100%;padding:17px;
-    background:linear-gradient(135deg,var(--accent),#ff6b8a);
-    border:none;border-radius:14px;color:white;
-    font-size:1rem;font-weight:700;font-family:'Inter',sans-serif;
-    cursor:pointer;letter-spacing:.3px;transition:all .2s;
-  }
+  .btn-join { width:100%;padding:17px;background:linear-gradient(135deg,var(--accent),#ff6b8a);border:none;border-radius:14px;color:white;font-size:1rem;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;letter-spacing:.3px;transition:all .2s; }
   .btn-join:active { transform:scale(.97); }
   .btn-join:disabled { opacity:.45;cursor:not-allowed; }
-
-  /* ─ ÉCRAN MICRO ─ */
-  #screenMic {
-    display:none;flex-direction:column;align-items:center;gap:28px;
-    width:100%;max-width:310px;position:relative;z-index:1;
-  }
-
+  #screenMic { display:none;flex-direction:column;align-items:center;gap:28px;width:100%;max-width:310px;position:relative;z-index:1; }
   .greeting { text-align:center; }
   .greeting .hey { font-size:.85rem;color:var(--muted);margin-bottom:2px; }
-  .greeting .name {
-    font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:4px;
-    background:linear-gradient(135deg,var(--accent),var(--accent2));
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  }
-
+  .greeting .name { font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:4px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent; }
   .mic-wrap { display:flex;flex-direction:column;align-items:center;gap:14px; }
-
-  .mic-btn {
-    width:155px;height:155px;border-radius:50%;
-    border:3px solid rgba(255,255,255,.1);
-    background:rgba(255,255,255,.04);
-    display:flex;align-items:center;justify-content:center;
-    cursor:pointer;position:relative;
-    transition:all .25s;-webkit-user-select:none;user-select:none;
-  }
-  .mic-btn.on {
-    background:rgba(255,45,85,.18);border-color:var(--accent);
-    box-shadow:0 0 35px rgba(255,45,85,.35),0 0 70px rgba(255,45,85,.12);
-  }
+  .mic-btn { width:155px;height:155px;border-radius:50%;border:3px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;transition:all .25s;-webkit-user-select:none;user-select:none; }
+  .mic-btn.on { background:rgba(255,45,85,.18);border-color:var(--accent);box-shadow:0 0 35px rgba(255,45,85,.35),0 0 70px rgba(255,45,85,.12); }
   .mic-icon { font-size:3.8rem;transition:transform .2s; }
   .mic-btn.on .mic-icon { transform:scale(1.08); }
-
-  .ring {
-    position:absolute;border-radius:50%;
-    border:2px solid var(--accent);opacity:0;
-    width:100%;height:100%;
-  }
+  .ring { position:absolute;border-radius:50%;border:2px solid var(--accent);opacity:0;width:100%;height:100%; }
   .mic-btn.on .ring { animation:ripple 1.6s ease-out infinite; }
   .mic-btn.on .ring:nth-child(2) { animation-delay:.53s; }
   .mic-btn.on .ring:nth-child(3) { animation-delay:1.06s; }
-  @keyframes ripple { 0%{transform:scale(1);opacity:.55} 100%{transform:scale(1.85);opacity:0} }
-
+  @keyframes ripple { 0%{transform:scale(1);opacity:.55}100%{transform:scale(1.85);opacity:0} }
   .mic-label { font-size:.82rem;color:var(--muted);text-align:center;transition:color .2s; }
   .mic-label.on { color:var(--accent);font-weight:600; }
-
-  .vu-bar {
-    width:100%;height:5px;background:rgba(255,255,255,.07);
-    border-radius:3px;overflow:hidden;
-  }
-  .vu-fill {
-    height:100%;width:0%;
-    background:linear-gradient(90deg,var(--green),#ffd60a,var(--accent));
-    border-radius:3px;transition:width .05s;
-  }
-
-  .conn-status {
-    display:flex;align-items:center;gap:8px;
-    font-size:.72rem;color:var(--muted);
-    padding:7px 14px;background:rgba(255,255,255,.05);
-    border-radius:999px;
-  }
+  .vu-bar { width:100%;height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden; }
+  .vu-fill { height:100%;width:0%;background:linear-gradient(90deg,var(--green),#ffd60a,var(--accent));border-radius:3px;transition:width .05s; }
+  .conn-status { display:flex;align-items:center;gap:8px;font-size:.72rem;color:var(--muted);padding:7px 14px;background:rgba(255,255,255,.05);border-radius:999px; }
   .dot { width:7px;height:7px;border-radius:50%;background:var(--muted); }
   .dot.ok { background:var(--green);box-shadow:0 0 5px var(--green); }
   .dot.spin { background:#ffd60a;animation:blink 1s infinite; }
   @keyframes blink { 0%,100%{opacity:1}50%{opacity:.25} }
-
-  .toast {
-    position:fixed;bottom:28px;left:50%;
-    transform:translateX(-50%) translateY(70px);
-    background:rgba(25,25,35,.95);color:var(--text);
-    padding:11px 22px;border-radius:10px;font-size:.82rem;
-    border:1px solid rgba(255,255,255,.09);
-    transition:transform .3s ease;z-index:99;
-    backdrop-filter:blur(10px);white-space:nowrap;
-  }
+  .toast { position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(70px);background:rgba(25,25,35,.95);color:var(--text);padding:11px 22px;border-radius:10px;font-size:.82rem;border:1px solid rgba(255,255,255,.09);transition:transform .3s ease;z-index:99;backdrop-filter:blur(10px);white-space:nowrap; }
   .toast.show { transform:translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
-
 <div class="orb orb1"></div>
 <div class="orb orb2"></div>
-
 <div id="screenName">
   <div class="logo">KARAOKÉ</div>
   <p class="subtitle">Entre ton prénom pour rejoindre la session</p>
   <input type="text" id="nameInput" placeholder="Ton prénom" maxlength="20" autocomplete="off">
   <button class="btn-join" id="btnJoin">Rejoindre 🎤</button>
 </div>
-
 <div id="screenMic">
   <div class="greeting">
     <div class="hey">Prêt à chanter,</div>
     <div class="name" id="dispName">—</div>
   </div>
-
   <div class="mic-wrap">
     <div class="mic-btn" id="micBtn">
       <div class="ring"></div><div class="ring"></div><div class="ring"></div>
@@ -172,36 +73,29 @@
     </div>
     <div class="mic-label" id="micLabel">Appuie pour activer le micro</div>
   </div>
-
   <div class="vu-bar"><div class="vu-fill" id="vuFill"></div></div>
-
   <div class="conn-status">
     <div class="dot spin" id="dot"></div>
     <span id="connTxt">Connexion…</span>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
-
 <script>
 const socket = io({ reconnection: true, reconnectionDelay: 2000 });
-
 let myName = '', mySingerId = null;
 let pc = null, localStream = null;
 let audioCtx = null, analyser = null;
 let micOn = false;
-
-// ── REJOINDRE ──────────────────────────────────────────────────────────
+ 
 function join() {
   const name = document.getElementById('nameInput').value.trim() || 'Chanteur';
   myName = name;
   document.getElementById('btnJoin').disabled = true;
   socket.emit('join-as-singer', { name });
 }
-
 document.getElementById('btnJoin').onclick = join;
 document.getElementById('nameInput').addEventListener('keydown', e => e.key==='Enter' && join());
-
+ 
 socket.on('joined-confirmed', ({ singerId }) => {
   mySingerId = singerId;
   document.getElementById('dispName').textContent = myName;
@@ -209,36 +103,27 @@ socket.on('joined-confirmed', ({ singerId }) => {
   document.getElementById('screenMic').style.display = 'flex';
   toast('✅ Connecté à la session !');
 });
-
-// Reconnexion : re-rejoindre automatiquement si déconnecté
+ 
 socket.on('connect', () => {
   if (mySingerId) {
     socket.emit('join-as-singer', { name: myName });
     if (micOn) restartMic();
   }
 });
-
-// ── MICRO ──────────────────────────────────────────────────────────────
+ 
 document.getElementById('micBtn').onclick = () => micOn ? stopMic() : startMic();
-
+ 
 async function startMic() {
   try {
-    // 1. Micro d'abord
     localStream = await navigator.mediaDevices.getUserMedia({
       audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
     });
-
-    // 2. Credentials TURN ensuite
-    let iceServers = [{ urls: 'stun:stun.l.google.com:19302' }];
-    try {
-      const r = await fetch('/turn-credentials');
-      iceServers = await r.json();
-    } catch(e) {}
-    pc = new RTCPeerConnection({ iceServers });
+ 
+    pc = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
     localStream.getTracks().forEach(t => pc.addTrack(t, localStream));
-
+ 
     pc.onicecandidate = e => e.candidate && socket.emit('ice-candidate', { candidate: e.candidate, targetId: 'host' });
-
+ 
     pc.onconnectionstatechange = () => {
       const s = pc.connectionState;
       const dot = document.getElementById('dot');
@@ -247,31 +132,30 @@ async function startMic() {
       else if (s === 'failed') { dot.className='dot'; txt.textContent='Connexion perdue — rechargez'; }
       else                     { dot.className='dot spin'; txt.textContent='Connexion…'; }
     };
-
+ 
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
     socket.emit('offer', { offer, singerId: mySingerId });
-
-    // Vumètre local
+ 
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const src = audioCtx.createMediaStreamSource(localStream);
     analyser = audioCtx.createAnalyser(); analyser.fftSize = 256;
     src.connect(analyser);
     animVu();
-
+ 
     micOn = true;
     document.getElementById('micBtn').classList.add('on');
     document.getElementById('micLabel').textContent = 'Micro actif — appuie pour couper';
     document.getElementById('micLabel').className = 'mic-label on';
     toast('🎤 Micro activé !');
-
+ 
   } catch(err) {
     console.error(err);
     toast('❌ Impossible d\'accéder au micro');
     document.getElementById('btnJoin').disabled = false;
   }
 }
-
+ 
 function stopMic() {
   localStream?.getTracks().forEach(t => t.stop()); localStream = null;
   pc?.close(); pc = null;
@@ -285,17 +169,17 @@ function stopMic() {
   document.getElementById('connTxt').textContent = 'Micro coupé';
   toast('🔇 Micro coupé');
 }
-
+ 
 async function restartMic() { stopMic(); await startMic(); }
-
+ 
 socket.on('answer', async ({ answer }) => {
   if (pc) await pc.setRemoteDescription(new RTCSessionDescription(answer)).catch(()=>{});
 });
-
+ 
 socket.on('ice-candidate', ({ candidate }) => {
   if (pc) pc.addIceCandidate(new RTCIceCandidate(candidate)).catch(()=>{});
 });
-
+ 
 function animVu() {
   if (!analyser) return;
   const data = new Uint8Array(analyser.frequencyBinCount);
@@ -308,7 +192,7 @@ function animVu() {
   }
   loop();
 }
-
+ 
 function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
